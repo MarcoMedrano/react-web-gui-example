@@ -15,7 +15,7 @@ const ACCESS_KEY_LENGTH = 24;
 const API_KEY_LENGTH = 42;
 
 class App extends Component {
-  state = { stream: null, connecting: false, audio: true, video: true, guest_link: null };
+  state = { stream: null, connecting: false, audio: true, video: true, guest_link: null, recording: false };
   roomClient = null;
   roomId = null;
 
@@ -24,14 +24,12 @@ class App extends Component {
   }
 
   handleEvent = (event) => {
-    console.debug("TDX Eyeson event received ", event);
+    console.debug("TDX Eyeson event received ", JSON.stringify(event));
 
     switch(event.type) {
-      // case "connection":
-      //   if(event.connectionStatus == "ready") eyeson.send({ type: 'start_screen_capture', screen: true });
-      // break;
       case "accept":
         eyeson.send({ type: 'start_screen_capture', screen: true });
+        // eyeson.send({ type: 'start_recording' });
         this.setState({
           local: event.localStream,
           stream: event.remoteStream,
@@ -67,6 +65,13 @@ class App extends Component {
       audio: this.state.audio,
     });
     this.setState({ video: !this.state.video });
+  }
+
+  toggleRecording = () => {
+    eyeson.send({
+      type: this.state.recording ? 'stop_recording' : 'start_recording',
+    });
+    this.setState({ recording: !this.state.recording });
   }
 
   start = (event) => {
@@ -144,6 +149,12 @@ class App extends Component {
                   onClick={this.toggleVideo}
                   label="Toggle video"
                   icon={this.state.video ? 'videocam' : 'videocam_off'}
+                />
+                <IconButton
+                  checked={this.state.recording}
+                  onClick={this.toggleRecording}
+                  label="Toggle recording"
+                  icon={this.state.recording ? 'radio_button_checked' : 'radio_button_unchecked'}
                 />
               </Fragment>
             )}
