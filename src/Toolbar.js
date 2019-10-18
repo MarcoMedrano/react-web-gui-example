@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.png';
 import {Toolbar, ToolbarRow, ToolbarSection, ToolbarTitle} from '@rmwc/toolbar';
-import {Button} from '@rmwc/button';
+// import {Button} from '@rmwc/button';
 import './Toolbar.css';
 
 export default ({title}) => (
@@ -12,7 +12,7 @@ export default ({title}) => (
         <ToolbarTitle>{title}</ToolbarTitle>
       </ToolbarSection>
       <ToolbarSection alignEnd>
-        <Button
+        {/* <Button
           tag="a"
           target="_blank"
           rel="noopener"
@@ -27,7 +27,7 @@ export default ({title}) => (
           href="https://github.com/eyeson-team"
           unelevated>
           GitHub
-        </Button>
+        </Button> */}
       </ToolbarSection>
     </ToolbarRow>
   </Toolbar>
