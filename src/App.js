@@ -15,7 +15,7 @@ const ACCESS_KEY_LENGTH = 24;
 const API_KEY_LENGTH = 42;
 
 class App extends Component {
-  state = { stream: null, connecting: false, audio: true, video: true, guest_link: null, recording: false };
+  state = { stream: null, connecting: false, audio: true, video: true, guest_link: null, recording: false, recording_link: null };
   roomClient = null;
   roomId = null;
 
@@ -36,6 +36,12 @@ class App extends Component {
           connecting: false,
         });
       break;
+      case "recording_update":
+        this.setState({
+          recording_link: event.recording.links.download,
+          recording_duration: event.recording.duration
+        });
+        break;
       default:
     }
 
@@ -162,12 +168,13 @@ class App extends Component {
           <GridCell span="12">
             {this.state.guest_link && <><strong>Guest Link: </strong> <a rel="noopener noreferrer" target="_blank" href={this.state.guest_link} >{this.state.guest_link}</a></>}
           </GridCell>
+          <GridCell span="12">
+            {this.state.recording_link && <><div>Recording duration: {this.state.recording_duration} seconds.</div> <a rel="noopener noreferrer" target="_blank" href={this.state.recording_link} >DOWNLOAD</a></>}
+          </GridCell>
         </Grid>
       </ThemeProvider>
     );
   }
-
-
 }
 
 export default App;
