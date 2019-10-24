@@ -1,0 +1,9 @@
+TdxClient->EyesonServer:openRoom(apiKey): POST
+EyesonServer->TdxClient:response(accessKey)
+EyesonServer-->TdxServer:events(room_update): POST
+TdxClient->EyesonServer:start(acccessKey): eyeson.js
+EyesonServer-->TdxServer:events(room_update): POST
+TdxClient->EyesonServer:send(start_recording): eyeson.js
+TdxClient->EyesonServer:send(stop_recording): eyeson.js
+EyesonServer-->TdxServer:events(recording_update): POST
+

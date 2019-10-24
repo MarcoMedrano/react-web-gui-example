@@ -24,12 +24,17 @@ class App extends Component {
   }
 
   handleEvent = (event) => {
-    console.debug("TDX Eyeson event received ", JSON.stringify(event));
+    if(event.type !== "voice_activity")
+      console.debug("TDX Eyeson event received ", JSON.stringify(event));
 
     switch(event.type) {
-      case "accept":
-        eyeson.send({ type: 'start_screen_capture', screen: true });
-        // eyeson.send({ type: 'start_recording' });
+      case "connection" :
+        if(event.connectionStatus === "ready"){
+        }
+        break;
+        case "accept":
+          console.timeEnd("TDX ScreenShare time ");
+          eyeson.send({ type: 'start_screen_capture', screen: true });
         this.setState({
           local: event.localStream,
           stream: event.remoteStream,
@@ -44,13 +49,6 @@ class App extends Component {
         break;
       default:
     }
-
-
-    // if(event.connectionStatus === 'ready') {
-    //   eyeson.join({ audio: true, video: true });
-    //   // return ;
-    // }
-
   }
 
   toggleAudio = () => {
@@ -85,25 +83,32 @@ class App extends Component {
     if (key.length !== ACCESS_KEY_LENGTH) { return; }
     this.setState({ connecting: true });
     eyeson.start(key);
+    // eyeson.connect(key);
   }
 
-  openRoom = async (event) => {
+  startOpenningRoom = async (event) => {
+    console.time("TDX ScreenShare time ");
+
     const apiKey = event.target.value.trim();
     if (apiKey.length !== API_KEY_LENGTH) { return; }
 
+    console.time("TDX OpenRoom time ");
     this.roomClient = new RoomClient(apiKey);
 
     this.setState({ connecting: true });
 
     const party = await this.roomClient.openRoom();
-    // this.roomId = party.roomid???
+    console.timeEnd("TDX OpenRoom time ");
+    
     console.log("TDX Room opened\n", JSON.stringify(party));
-
-    this.setState({ guest_link: party.links.guest_join });
+    
+    console.time("TDX StartMeeting time ");
     eyeson.start(party.access_key);
-
-    const roomInfo = await this.roomClient.getRoomInfo(party.room.id);
-    console.log("TDX Room info\n", JSON.stringify(roomInfo));
+    console.timeEnd("TDX StartMeeting time ");
+    
+    // const roomInfo = await this.roomClient.getRoomInfo(party.room.id);
+    // console.log("TDX Room info\n", JSON.stringify(roomInfo));
+    this.setState({ guest_link: party.links.guest_join });
   }
 
   render() {
@@ -119,7 +124,7 @@ class App extends Component {
               <Fragment>
                 <TextField
                   label="API Access Key"
-                  onChange={this.openRoom}
+                  onChange={this.startOpenningRoom}
                   disabled={this.state.connecting}
                 />
                 <TextFieldHelperText>

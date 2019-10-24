@@ -17,7 +17,7 @@ class RoomClient {
   openRoom = async () => {
     const init = {...this.init, method: 'POST'}
     
-    const request = new Request('https://api.eyeson.team/rooms?user[name]=Ezequiel Medrano', init);
+    const request = new Request('https://api.eyeson.team/rooms?user[name]=Ezequiel Medrano&options[show_names]=false', init);
     const response = await fetch(request);
     
     return await response.json();
